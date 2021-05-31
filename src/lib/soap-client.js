@@ -1,10 +1,8 @@
-let AES = require('./AES');
-let DOMParser = require('xmldom').DOMParser;
-let request = require('request-promise');
-let md5 = require('./hmac_md5');
+const fetch = require( 'node-fetch' );
+const DOMParser = require( 'xmldom' ).DOMParser;
+const md5 = require( './hmac_md5' );
 
 class SoapClient {
-
     constructor(ipAddress, password) {
         this.HNAP1_XMLNS = "http://purenetworks.com/HNAP1/";
         this.HNAP_METHOD = "POST";
@@ -76,8 +74,7 @@ class SoapClient {
     }
 
     _soapAction(method, responseElement, body) {
-        let options = {
-            uri: this.HNAP_AUTH.URL,
+        return fetch( this.HNAP_AUTH.URL, {
             method: this.HNAP_METHOD,
             body,
             headers: {
@@ -86,33 +83,37 @@ class SoapClient {
                 "HNAP_AUTH": this._getHnapAuth('"' + this.HNAP1_XMLNS + method + '"', this.HNAP_AUTH.PrivateKey),
                 "Cookie": "uid=" + this.HNAP_AUTH.Cookie
             }
-        };
-        return request(options).then((body) => {
-            return this._readResponseValue(body, responseElement);
-        }).catch((err) => {
-            console.log("error:", err);
-        });
+        } )
+            .then( response => response.text() )
+            .then( body => {
+                return this._readResponseValue(body, responseElement);
+            } )
+            .catch( err => {
+                console.log("error:", err);
+            } );
     }
 
     login() {
-        return new Promise((resolve, reject) => {
-            let options = {
-                uri: this.HNAP_AUTH.URL,
+        // TODO: Change to async/await
+        return new Promise( ( resolve, reject ) => {
+            fetch( this.HNAP_AUTH.URL, {
                 method: this.HNAP_METHOD,
                 body: this._requestBody(this.HNAP_LOGIN_METHOD, this._loginRequest()),
                 headers: {
                     "Content-Type": "text/xml; charset=utf-8",
                     "SOAPAction": '"' + this.HNAP1_XMLNS + this.HNAP_LOGIN_METHOD + '"'
                 },
-            };
-            request(options).then(body => {
-                this._saveLoginResult(body);
-                return resolve(this._soapAction(this.HNAP_LOGIN_METHOD, "LoginResult", this._requestBody(this.HNAP_LOGIN_METHOD, this._loginParameters())));
-            }).catch((err) => {
-                console.log("error:", err);
-                return reject(err);
-            });
-        });
+            } )
+                .then( response => response.text() )
+                .then( body => {
+                    this._saveLoginResult(body);
+                    return resolve( this._soapAction( this.HNAP_LOGIN_METHOD, "LoginResult", this._requestBody( this.HNAP_LOGIN_METHOD, this._loginParameters() ) ) );
+                } )
+                .catch( err => {
+                    console.log("error:", err);
+                    return reject(err);
+                } );
+        } );
     }
 }
 

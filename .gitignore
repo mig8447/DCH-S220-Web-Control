@@ -1,15 +1,6 @@
-.DS_Store
-npm-debug.log
-report
-.idea/
+# Ignore macOS generated metadata
+**/.DS_Store
+# Ignore the Node.js modules
 node_modules
-
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-*.tmp
+# Ignore the environment config
+.env

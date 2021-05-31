@@ -1,21 +1,23 @@
-const Siren = require('./Siren');
+require('dotenv').config();
+
+const Siren = require('./siren');
 const co = require('co');
 const http = require('http');
 const url = require('url');
-const auth = require('basic-auth');
-const config = require('./config');
 
+const PORT = process.env.PORT || 3000;
+const IP = process.env.IP;
+const PIN = process.env.PIN;
+
+if ( !IP ) {
+    throw new Error( 'No IP environment variable set' );
+}
+if ( !PIN ) {
+    throw new Error( 'No PIN environment variable set' );
+}
 
 http.createServer((req, res) => {
-    let credentials = auth(req);
     let query = url.parse(req.url, true).query;
-
-    // :: Validate credentials
-    if (!credentials || credentials.name !== config.webhookUsername || credentials.pass !== config.webhookPassword) {
-        res.writeHead(401, {'Content-Type': 'application/json'});
-        let response = {status: 'ERROR', message: 'Access Denied'};
-        return res.end(JSON.stringify(response));
-    }
 
     // :: Validate query type
     let type = query.type;
@@ -30,7 +32,7 @@ http.createServer((req, res) => {
 
     co(function* () {
 
-        let siren = new Siren(config.sirenIpAddress, config.sirenPassword);
+        let siren = new Siren(IP, PIN);
         let loginStatus = yield siren.login();
         if(loginStatus !== 'success') {
             res.writeHead(503, {'Content-Type': 'application/json'});
@@ -99,5 +101,5 @@ http.createServer((req, res) => {
         return res.end(JSON.stringify(response));
     });
 
-}).listen(config.webhookPort);
-console.log(`:: Kickstarted server on port ${config.webhookPort}`);
+}).listen(PORT);
+console.log(`:: Kickstarted server on port ${PORT}`);

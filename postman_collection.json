@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "016fdfb4-4dd2-4b90-98ff-fa933c8f5ddf",
+		"name": "dch-s220-rest-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Start",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/?type=start&volume=1&sound=5&duration=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "start"
+						},
+						{
+							"key": "volume",
+							"value": "1"
+						},
+						{
+							"key": "sound",
+							"value": "5"
+						},
+						{
+							"key": "duration",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stop",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/?type=stop",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "stop"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Status",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/?type=status",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "status"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Beeps",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/?type=beep&times=2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "beep"
+						},
+						{
+							"key": "times",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

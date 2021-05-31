@@ -1,97 +1,93 @@
-# D-Link DCH-S220 Web Control
-This project aims to control via a custom REST API the D-Link's DCH-S220 Siren, to allow total cutomized control over this product for home automation enthiusiasts or hobbyists.
+# D-Link DCH-S220 REST API
 
-This project is only possible due to the great work of [@bikerp](https://github.com/bikerp) and his [dsp-w215-hnap](https://github.com/bikerp/dsp-w215-hnap) repo.
+This project aims to control via a custom REST API the D-Link's DCH-S220 Siren
+to allow total customized control over this product for home automation
+enthusiasts or hobbyists.
 
-The project must run on a device in the same network as your siren (on a raspberry pi for example), you must open the configured ports on your router to access it from the outside. 
+This project is only possible due to the great work of [@bikerp](https://github.com/bikerp)
+and his [dsp-w215-hnap](https://github.com/bikerp/dsp-w215-hnap) repo.
+
+The project must run on a device in the same network as your siren (on a
+raspberry pi for example), you must open the configured ports on your router to
+access it from the outside.
 
 # Install
 
-To install, clone this repo first via git
-```
-git@github.com:mtflud/DCH-S220-Web-Control.git
-```
-
-Navigate to the project's folder and install dependencies with NPM
-```
-npm i
-```
-Or with Yarn
-```
-yarn install
-```
-
-Configure the authentication and siren parameters on `config.js`
-```
-webhookPort = The port we should listen from
-webhookUsername = Your webhook username
-webhookPassword = Your webhook password
-sirenIpAddress = Your D-Link's Siren IP Address
-sirenPassword = The 6 digit pin that comes in your siren's card
-```
-
-Run it
-```
-node index.js
-```
+1. Clone this repo
+2. Change into the project's root directory
+3. Install the dependencies by executing
+     ```sh
+     npm i
+     ```
+4. Copy the `.env.example` into `.env` by executing
+     ```sh
+     cp .env.example .env
+     ```
+5. Edit the `.env` file to configure the authentication and siren parameters
+6. Start the server by executing
+     ```sh
+     npm start
+     ```
 
 Additionally, you can add a watcher to the process with [pm2](http://pm2.keymetrics.io/)
 
 # Consuming endpoints and controlling the siren
 
-All endpoints must be consumed to the root "/" using basic authentication and are GET types.
+All endpoints must be consumed with HTTP GET under the root "/".
 
 ## Start sounding the siren
-```
-Parameters: 
-type = 'start'
-volume = Value from 1 to 100
-sound = Value from 1 to 6
-duration = value from 1 to 88888 (infinite)
-```
-Example with curl
-```
-curl "http://127.0.0.1:9867/?type=start&volume=20&sound=1&duration=30" \
-     -u yourUsername:yourPassword
+
+Parameters:
+- `type`: 'start'
+- `volume`: A value from 1 to 100
+- `sound`: A value from 1 to 6
+  - 1: emergency
+  - 2: fire
+  - 3: ambulance
+  - 4: police
+  - 5: door_chime
+  - 6: beep
+- `duration`: A value from 1 to 88888 (infinite)
+
+cURL Example:
+```sh
+curl 'http://localhost:3000/?type=start&volume=20&sound=1&duration=30'
 ```
 
 ## Stop sounding the siren
-```
+
 Parameters: 
-type = 'stop'
-```
-Example with curl
-```
-curl "http://127.0.0.1:9867/?type=stop" \
-     -u yourUsername:yourPassword
+- `type`: 'stop'
+
+cURL Example:
+```sh
+curl 'http://localhost:3000/?type=stop'
 ```
 
 ## Sound *n* beeps
-```
+
 Parameters: 
-type = 'beep'
-times = Number from 1 to n the siren must beep
-```
-Example with curl
-```
-curl "http://127.0.0.1:9867/?type=beep&times=1" \
-     -u yourUsername:yourPassword
+- `type`: 'beep'
+- `times`: A number from 1 to n the siren must beep
+
+cURL Example:
+```sh
+curl 'http://localhost:3000/?type=beep&times=1'
 ```
 
 ## Get the current status of the siren
 Figure out if the siren is sounding or not.
-```
+
 Parameters: 
-type = 'status'
-```
-Example with curl
-```
-curl "http://127.0.0.1:9867/?type=status" \
-     -u yourUsername:yourPassword
+- `type`: 'status'
+
+cURL Example:
+```sh
+curl 'http://localhost:3000/?type=status'
 ```
 
-Example response
-```
+## Sample response
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json
 Date: Sun, 06 Aug 2017 19:57:48 GMT

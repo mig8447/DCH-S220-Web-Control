@@ -1,4 +1,4 @@
-let SoapClient = require('./lib/SoapClient');
+const SoapClient = require('./lib/soap-client');
 const SOUNDS = {
     EMERGENCY: 1,
     FIRE: 2,
